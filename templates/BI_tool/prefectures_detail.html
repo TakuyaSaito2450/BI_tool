@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block content %}
+<h1>{{ prefectures_name }}のポイ捨てデータ</h1>
+
+<section class="tables">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header d-flex">
+                        <h3 class="h4">ポイ捨て推移</h3>
+                    </div><!--card header-->
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table width="400%" class="table table-bordered display nowrap">
+                                <tr>
+                                    <th rowspan="1">日付</th>{% for item in littering_list reversed %}
+                                    <th colspan="2">{{ item.collection_date }}</th>
+                                    {% endfor %}
+                                </tr>
+                                <tr style="text-align: center;">
+                                    {% for item in littering_list reversed %}
+                                    <th width="100px">タバコ</th>
+                                    <th>{{ item.tobacco}}個</th>
+                                </tr>
+                                <tr>
+                                    <th width="100px">空き缶</th>
+                                    <th>{{ item.can}}個</th>
+                                </tr>
+                                    <th width="110px">ペットボトル</th>
+                                    <th>{{ item.bottles}}個</th>
+                                <tr>
+                                    <th class="lv1-bottom">ゴミ集計</th>
+                                </tr>
+                                {% endfor %}
+                                <tr>
+                            </table>
+                            <br>
+                        </div><!--table responsive-->
+                    </div><!-- card body -->
+                </div><!--card-->
+            </div><!--col-->
+        </div><!--row-->
+    </div><!-- container-fluid -->
+    <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header d-flex align-items-center">
+                        <h3 class="h4">ポイ捨て推移グラフ</h3>
+                    </div><!--card header-->
+                    <div class="card-body">
+                        <canvas id="myChart" width="400" height="200"></canvas>
+                        <script>
+                            var ctx = document.getElementById('myChart').getContext('2d');
+                            var label_fyear = [ {% for item in littering_list reversed %} "{{ item.collection_date }}", {% endfor %}];
+                            var data_tobacco = [ {% for item in littering_list reversed %} {{item.tobacco}}, {% endfor %} ];
+                            var data_can = [ {% for item in littering_list reversed %} {{item.can}}, {% endfor %} ];
+                            var data_bottles = [ {% for item in littering_list reversed %} {{item.bottles}}, {% endfor %} ];
+
+                            var data_tobacco = [ {% for item in littering_list reversed %} {{item.tobacco }}, {% endfor %} ];
+                            var data_can = [ {% for item in littering_list reversed %} {{item.can }}, {% endfor %} ];
+                            var data_bottles = [ {% for item in littering_list reversed %} {{item.bottles }}, {% endfor %} ];
+
+                            var myChart = new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    labels: label_fyear,
+                                    datasets: [{
+                                        label: 'タバコ',
+                                        data: data_tobacco,
+                                        fill: false,
+                                        lineTension: 0,
+                                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                        borderColor: 'rgba(255, 99, 132, 1)',
+                                        borderWidth: 2,
+                                    },{
+                                        label: '空き缶',
+                                        data: data_can,
+                                        fill: false,
+                                        lineTension: 0,
+                                        backgroundColor:'rgba(54, 162, 235, 0.2)',
+                                        borderColor: 'rgba(54, 162, 235, 1)',
+                                        borderWidth: 2,
+                                    },{
+                                        label: 'ペットボトル',
+                                        data: data_bottles,
+                                        fill: false,
+                                        lineTension: 0,
+                                        backgroundColor:'rgba(255, 206, 86, 0.2)',
+                                        borderColor: 'rgba(255, 206, 86, 1)',
+                                        borderWidth: 2,
+                                    },
+                                    ]
+                                },
+                                options: {
+                                }
+                            });
+                        </script>
+                    </div><!-- class card body -->
+                </div><!-- class card -->
+            </div><!-- col -->
+        </div><!-- row -->
+</section>
+<br><br>
+{% endblock %}
+
